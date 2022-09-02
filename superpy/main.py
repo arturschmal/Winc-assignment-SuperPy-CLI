@@ -1,10 +1,9 @@
 # Imports
 import os
 import argparse
-from ast import arg
 import csv
 from datetime import date
-import sp_functions
+from sp_functions import *
 
 # Do not change these lines.
 __winc_id__ = "a2bc36ea784242e4989deb157d527ba0"
@@ -35,29 +34,29 @@ def main():
     # create the top level parser
     parser = argparse.ArgumentParser(description='CLI for supermarket inventories')
     # parser.add_argument()
-    subparsers = parser.add_subparsers(help='sub-command help')
+    subparsers = parser.add_subparsers()
     
     # create the parser for buying products
-    buy_parser = subparsers.add_parser('buy', help='buy help')
+    buy_parser = subparsers.add_parser('buy', 
+                                        help='With the buy command you can add a product to the stock.\nE.g.: buy [Product name] [Buy date (YYY-MM-DD)] [Buy price] [Expiration date YYY-MM-DD]')
     buy_parser.add_argument('product_name', action='store', help='The name of the product')
     buy_parser.add_argument('buy_date', action='store', help='The date on which the product is bought')
     buy_parser.add_argument('buy_price', action='store', help='The price paid for the product')
     buy_parser.add_argument('expiration_date', action='store', help='The date on which the product expires')
-
+    buy_parser.set_defaults(func=buy)
 
     # create the parser for selling products
     sell_parser = subparsers.add_parser('sell', help='sell help')
     sell_parser.add_argument('product_name', action='store', help='The name of the product')
     sell_parser.add_argument('sell_date', action='store', help='The date on which the product is bought')
     sell_parser.add_argument('sell_price', action='store', help='The price paid for the product')
+    sell_parser.set_defaults(func=sell)
+
 
     args = parser.parse_args()
 
-    sp_functions.buy_item(args.product_name, args.buy_date, args.buy_price, args.expiration_date)
-    print(f'\n✅ {args.product_name} added to the stock\n')
-
-    sp_functions.sell_item(args.product_name, args.sell_date, args.sell_price)
-    print(f'\n✅ {args.product_name} was sold\n')
+    if args.func:
+        args.func(args)
 
 if __name__ == "__main__":
     main()
