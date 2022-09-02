@@ -15,6 +15,7 @@ import argparse
 #             bought_id = i[0]
 #             print(bought_id)
 
+# pass args from subparser to function
 def buy(args):
     with open('bought.csv',"r") as f:
         reader = csv.reader(f,delimiter = ",")
