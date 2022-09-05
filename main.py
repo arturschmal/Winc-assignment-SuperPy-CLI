@@ -35,8 +35,6 @@ def main():
         file.write(today)
 
     
-    tomorrow = today(timedelta(days=1))
-    
     # create the top level parser
     parser = argparse.ArgumentParser(description='CLI for supermarket inventories')
     # parser.add_argument()
