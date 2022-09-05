@@ -15,6 +15,7 @@ __human_name__ = "superpy"
 # get the current working directory
 current_directory = os.getcwd()
 
+
 # check if csv files exist and create them if they don't exist
 if not os.path.isfile('bought.csv'):
     with open('bought.csv', mode='w') as csv_file:
@@ -31,10 +32,14 @@ if not os.path.isfile('sold.csv'):
     csv_file.close()
 
 def main():
-    # create the top level parser
-    parser = argparse.ArgumentParser(description='CLI for supermarket inventories')
-    # parser.add_argument()
-    subparsers = parser.add_subparsers()
+    # write today's date to a textfile
+    today = str(date.today())
+    with open('today.txt', 'w') as file:
+        file.write(today)
+        # create the top level parser
+        parser = argparse.ArgumentParser(description='CLI for supermarket inventories')
+        # parser.add_argument()
+        subparsers = parser.add_subparsers()
     
     # create the parser for buying products
     buy_parser = subparsers.add_parser('buy', 
