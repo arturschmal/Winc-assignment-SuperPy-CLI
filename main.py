@@ -2,7 +2,7 @@
 import os
 import argparse
 import csv
-from datetime import date
+from datetime import date, timedelta
 from sp_functions import *
 
 # Do not change these lines.
@@ -11,10 +11,6 @@ __human_name__ = "superpy"
 
 
 # Your code below this line.
-
-# get the current working directory
-current_directory = os.getcwd()
-
 
 # check if csv files exist and create them if they don't exist
 if not os.path.isfile('bought.csv'):
@@ -34,13 +30,18 @@ if not os.path.isfile('sold.csv'):
 def main():
     # write today's date to a textfile
     today = str(date.today())
+
     with open('today.txt', 'w') as file:
         file.write(today)
-        # create the top level parser
-        parser = argparse.ArgumentParser(description='CLI for supermarket inventories')
-        # parser.add_argument()
-        subparsers = parser.add_subparsers()
+
     
+    tomorrow = today(timedelta(days=1))
+    
+    # create the top level parser
+    parser = argparse.ArgumentParser(description='CLI for supermarket inventories')
+    # parser.add_argument()
+    subparsers = parser.add_subparsers()
+
     # create the parser for buying products
     buy_parser = subparsers.add_parser('buy', 
                                         help='With the buy command you can add a product to the stock.\nE.g.: buy [Product name] [Buy date (YYY-MM-DD)] [Buy price] [Expiration date YYY-MM-DD]')

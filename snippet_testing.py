@@ -1,7 +1,7 @@
 import os
 import csv
 import argparse
-from datetime import date
+from datetime import date, datetime, timedelta
 
 # # read the id from bought.csv and copy it to bought_id in sold.csv
 # product_name = 'apple'
@@ -53,10 +53,13 @@ from datetime import date
 
 # write today's date to a textfile
 today = str(date.today())
+tomorrow = today(timedelta(days=1))
+yesterday = today(timedelta(days=-1))
 
 with open('date_file.txt', 'w') as file:
     file.write(today)
 
+print(yesterday, today, tomorrow)
 
 with open('bought.csv', 'r', newline='') as csv_file:
             csv_reader = csv.DictReader(csv_file)
@@ -65,3 +68,4 @@ with open('bought.csv', 'r', newline='') as csv_file:
             for line in csv_reader:
                 if line['buy_price'] > str(1.2):
                     print(line['product_name'])
+
