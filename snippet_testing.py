@@ -1,7 +1,9 @@
-import os
-import csv
 import argparse
+import csv
+import os
 from datetime import date, datetime, timedelta
+
+from prettytable import from_csv
 
 # # read the id from bought.csv and copy it to bought_id in sold.csv
 # product_name = 'apple'
@@ -51,21 +53,104 @@ from datetime import date, datetime, timedelta
 #     args.func(args)
 
 
-# write today's date to a textfile
-today = str(date.today())
-tomorrow = today(timedelta(days=1))
-yesterday = today(timedelta(days=-1))
+# # write today's date to a textfile
+# today = str(date.today())
 
-with open('date_file.txt', 'w') as file:
-    file.write(today)
+# with open('date_file.txt', 'w') as file:
+#     file.write(today)
 
-print(yesterday, today, tomorrow)
 
-with open('bought.csv', 'r', newline='') as csv_file:
-            csv_reader = csv.DictReader(csv_file)
-            inventory = []
+# # modify the date in the textfile with a timedelta
+# def advance_time(time_delta):
+#     with open('date_file.txt', 'r') as file:
+#         date_string = file.read()
+#         format_string = '%Y-%m-%d'
+        
+#         advancetime = time_delta
+#         new_date = (datetime.strptime(date_string, format_string)) + timedelta(days=advancetime)
+
+#     with open('date_file.txt', 'w') as file:
+#         file.write(new_date.strftime('%Y-%m-%d'))
+
+
+# advance_time(-300)
+
+# # check if csv files exist and create them if they don't exist
+# def csv_check():
+#     if not os.path.isfile('bought.csv'):
+#         with open('bought.csv', mode='w') as csv_file:
+#             fieldnames = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
+#             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+#             writer.writeheader()
+#         csv_file.close()
+
+#     if not os.path.isfile('sold.csv'):
+#         with open('sold.csv', mode='w') as csv_file:
+#             fieldnames = ['id', 'bought_id', 'product_name', 'sell_date', 'sell_price']
+#             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+#             writer.writeheader()
+#         csv_file.close()
+    
+# csv_check()
+
+# with open('bought.csv', 'r', newline='') as csv_file:
+#             csv_reader = csv.DictReader(csv_file)
+#             inventory = []
             
-            for line in csv_reader:
-                if line['buy_price'] > str(1.2):
-                    print(line['product_name'])
+#             for line in csv_reader:
+#                 if line['buy_price'] > str(1.2):
+#                     print(line['product_name'])
 
+
+# # check if format date is correct
+# def validate_date(date_text: str):
+#     try:
+#         datetime.strptime(date_text, '%Y-%m-%d')
+#     except ValueError:
+#         raise ValueError(
+#             'Incorrect date format, date should be given as yyyy-mm-dd')
+
+#  def inventory(args):
+#         print('inventory action')
+#         if args.now is True:
+#             d = today
+#         if args.yesterday is True:
+#             d = str(date.today() - delta1)
+#         if args.date != None:
+#             validate_date(args.date)
+#             d = args.date
+
+# with open('bought.csv') as table_file:
+#     tab = from_csv(table_file)
+#     print(tab)
+
+
+# from prettytable import PrettyTable
+
+# x = PrettyTable()
+# x.field_names = ["City name", "Area", "Population", "Annual Rainfall"]
+# x.add_row(["Adelaide", 1295, 1158259, 600.5])
+# x.add_row(["Brisbane", 5905, 1857594, 1146.4])
+# x.add_row(["Darwin", 112, 120900, 1714.7])
+# x.add_row(["Hobart", 1357, 205556, 619.5])
+# x.add_row(["Sydney", 2058, 4336374, 1214.8])
+# x.add_row(["Melbourne", 1566, 3806092, 646.9])
+# x.add_row(["Perth", 5386, 1554769, 869.4])
+# x.align = "l"
+# print(x)
+
+# from csv import reader
+
+# with open('bought.csv', 'r') as table_file:
+#     csv_reader = csv.reader(table_file)
+#     first_row = next(csv_reader)
+#     for row in csv_reader:
+#         print(row)
+
+# with open("bought.csv", "r") as infile, open("temp.csv", "w") as outfile:
+#    reader = csv.reader(infile)
+#    next(reader, None)  # skip the headers
+#    writer = csv.writer(outfile)
+#    for row in reader:
+#        # process each row
+#        writer.writerow(row)

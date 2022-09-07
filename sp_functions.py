@@ -1,5 +1,50 @@
+import os
 import csv
 import argparse
+from datetime import date, datetime, timedelta
+from prettytable import from_csv
+
+
+# write today's date to a textfile
+def today():
+    if not os.path.isfile('date_file.txt'):
+        today = str(date.today())
+        with open('date_file.txt', 'w') as file:
+            file.write(today)
+        file.close()
+
+
+# modify the date in the textfile with a timedelta
+def advance_time(args):
+    with open('date_file.txt', 'r') as file:
+        date_string = file.read()
+        format_string = '%Y-%m-%d'
+    if args.advancetime == 'reset':
+        new_date = (datetime.strptime(date_string, format_string)) + timedelta(days=0)
+    else: 
+        advancetime = int(args.advancetime)
+        new_date = (datetime.strptime(date_string, format_string)) + timedelta(days=advancetime)
+
+    with open('date_file.txt', 'w') as file:
+        file.write(new_date.strftime('%Y-%m-%d'))
+
+
+# check if csv files exist and create them if they don't exist
+def csv_check():
+    if not os.path.isfile('bought.csv'):
+        with open('bought.csv', mode='w') as csv_file:
+            fieldnames = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+        csv_file.close()
+
+    if not os.path.isfile('sold.csv'):
+        with open('sold.csv', mode='w') as csv_file:
+            fieldnames = ['id', 'bought_id', 'product_name', 'sell_date', 'sell_price']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+        csv_file.close()
+
 
 # functions for buying and selling
 def buy(args):
@@ -38,3 +83,32 @@ def sell(args):
         writer.writerow(add_line)
     f.close()
     print(f'\n✅ {args.product_name} was sold\n')
+
+
+# functions for generating reports
+# def inventory(args):
+#     try:
+#         datetime.strptime(args.date, '%Y-%m-%d')
+#     except ValueError:
+#         raise ValueError('Date is not in correct format. Enter date as yyyy-mm-dd')
+
+#     date = datetime.strptime(args.date, '%Y-%m-%d')
+
+#     with open('bought.csv', 'r', newline='') as csv_file:
+#         csv_reader = csv.DictReader(csv_file)
+#         for line in csv_reader:
+#             if line['expiration_date'] >= date.strftime('%Y-%m-%d'):
+#                 print(line)
+
+
+def inventory(args):
+    try:
+        datetime.strptime(args.date, '%Y-%m-%d')
+        date = datetime.strptime(args.date, '%Y-%m-%d')
+        with open('bought.csv', 'r', newline='') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for line in csv_reader:
+                if line['expiration_date'] >= date.strftime('%Y-%m-%d'):
+                    print(line)
+    except ValueError:
+        print('Date is not in correct format. Enter date as yyyy-mm-dd')
