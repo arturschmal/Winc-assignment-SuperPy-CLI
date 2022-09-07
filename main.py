@@ -15,7 +15,7 @@ __human_name__ = "superpy"
 # Your code below this line.
 
 def main():
-    today()
+    write_today()
     csv_check()
 
     # create the top level parser
@@ -29,7 +29,8 @@ def main():
                                         '\nE.g.: "advance time -1" will change the current date to yesterday.'
                                         '\nE.g.: "advance time reset" will reset the date to today’s date.'
                                         '\n——————————————————————————————\n')
-    advancetime_parser.add_argument('advancetime', action='store', help='The amount of days for advancing the time')
+    advancetime_parser.add_argument('-a', '--advancetime', action='store', help='The amount of days for advancing the time')
+    advancetime_parser.add_argument('-r', '--reset', action='store_true', help='Reset the date to today')
     advancetime_parser.set_defaults(func=advance_time)
 
     # create the parser for buying products
@@ -38,7 +39,7 @@ def main():
                                         '\nE.g.: buy [Product name] [Buy date (YYY-MM-DD)] [Buy price] [Expiration date YYY-MM-DD]'
                                         '\n——————————————————————————————\n')
     buy_parser.add_argument('product_name', action='store', help='The name of the product')
-    buy_parser.add_argument('buy_date', action='store', help='The date on which the product is bought')
+    # buy_parser.add_argument('buy_date', action='store', help='The date on which the product is bought')
     buy_parser.add_argument('buy_price', action='store', help='The price paid for the product')
     buy_parser.add_argument('expiration_date', action='store', help='The date on which the product expires')
     buy_parser.set_defaults(func=buy)
@@ -51,9 +52,9 @@ def main():
     sell_parser.set_defaults(func=sell)
 
     # create the parser for the inventory
-    sell_parser = subparsers.add_parser('inventory', help='inventory help')
-    sell_parser.add_argument('-d', '--date', action='store', help='The name of the product')
-    sell_parser.set_defaults(func=inventory)
+    inventory_parser = subparsers.add_parser('inventory', help='inventory help')
+    inventory_parser.add_argument('-d', '--date', action='store_true', help='Set a custom date')
+    inventory_parser.set_defaults(func=inventory)
 
     args = parser.parse_args()
 

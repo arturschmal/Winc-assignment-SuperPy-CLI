@@ -2,7 +2,7 @@ import argparse
 import csv
 import os
 from datetime import date, datetime, timedelta
-
+from sp_functions import *
 from prettytable import from_csv
 
 # # read the id from bought.csv and copy it to bought_id in sold.csv
@@ -154,3 +154,10 @@ from prettytable import from_csv
 #    for row in reader:
 #        # process each row
 #        writer.writerow(row)
+
+
+
+# reset_today()
+# print(read_today())
+
+date_validation('2022-01-01')
