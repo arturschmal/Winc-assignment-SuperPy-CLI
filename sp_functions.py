@@ -45,12 +45,17 @@ def read_today():
         today = (datetime.strptime(date_string, format_string))
     return today.strftime('%Y-%m-%d')
 
+
 def date_validation(date):
     try:
         datetime.strptime(date, '%Y-%m-%d')
+        return date
     except ValueError:
-        print('Date is not in correct format. Enter date as yyyy-mm-dd')
-
+        print('Date format should be yyyy-mm-dd')
+        return None
+    # else:
+    #     return date
+    
 
 # CSV ———————————————————————————————————————————————————————————————
 
@@ -118,7 +123,9 @@ def sell(args):
     print(f'\n✅ {args.product_name} was sold\n')
 
 
-# functions for generating reports
+# REPORTS ———————————————————————————————————————————————————————————————
+
+# inventory report
 # def inventory(args):
 #     try:
 #         datetime.strptime(args.date, '%Y-%m-%d')
@@ -134,11 +141,40 @@ def sell(args):
 #                 print(line)
 
 
+# def inventory(args):
+#     with open('bought.csv', 'r', newline='') as csv_file:
+#         if args.date:
+#             today = date_validation(args.date)
+#         if today == None:
+#             print('Date format should be yyyy-mm-dd')
+#         else:
+#             today = read_today()
+#             csv_reader = csv.DictReader(csv_file)
+#             for line in csv_reader:
+#                 if line['expiration_date'] >= today:
+#                     print(line)
+
+# def inventory(args):
+#     if args.date:
+#         date_validation(args.date)
+#         if date_validation(args.date) == None:
+#             print('Date format should be yyyy-mm-dd')
+#         else:
+#             today = date_validation(args.date)
+#     if not args.date:
+#         today = read_today()
+
+#     with open('bought.csv', 'r', newline='') as csv_file:
+#         csv_reader = csv.DictReader(csv_file)
+#         for line in csv_reader:
+#             if line['expiration_date'] >= today:
+#                 print(line)
+
 def inventory(args):
-    if args.date is True:
-        print('date is submitted')
+    if args.date:
         date_validation(args.date)
-        today = args.date
+    if date_validation(args.date) is not None:
+        today = date_validation(args.date)
     else:
         today = read_today()
 
@@ -147,3 +183,4 @@ def inventory(args):
         for line in csv_reader:
             if line['expiration_date'] >= today:
                 print(line)
+

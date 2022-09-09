@@ -160,4 +160,44 @@ from prettytable import from_csv
 # reset_today()
 # print(read_today())
 
-date_validation('2022-01-01')
+# date_validation('2022-01-01')
+
+
+def optional(args):
+    if args.first_optional:
+        print('first optional')
+    if args.second_optional:
+        print('second optional')
+    else:
+        print('no optionals given')
+
+from argparse import RawTextHelpFormatter
+
+# create the top level parser
+parser = argparse.ArgumentParser(description='CLI for supermarket inventories', formatter_class=RawTextHelpFormatter)
+# parser.add_argument()
+subparsers = parser.add_subparsers()
+
+
+# test optional arguments parser
+optional_parser = subparsers.add_parser('optional', help='')
+optional_parser.add_argument('-f', '--first_optional', action='store_true', help='The amount of days for advancing the time')
+optional_parser.add_argument('-s', '--second_optional', action='store_true', help='Reset the date to today')
+optional_parser.set_defaults(func=optional)
+
+
+
+
+
+# def date_validation(date):
+#     try:
+#         datetime.strptime(date, '%Y-%m-%d')
+#     except ValueError:
+#         print('Date is not in correct format. Enter date as yyyy-mm-dd')
+#     else:
+#         return date
+
+
+today = date_validation('1-1-2020')
+
+print(today)

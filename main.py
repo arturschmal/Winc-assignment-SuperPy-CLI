@@ -3,7 +3,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 import csv
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from sp_functions import *
 from prettytable import PrettyTable
 
@@ -53,7 +53,8 @@ def main():
 
     # create the parser for the inventory
     inventory_parser = subparsers.add_parser('inventory', help='inventory help')
-    inventory_parser.add_argument('-d', '--date', action='store_true', help='Set a custom date')
+    inventory_parser.add_argument('-a', '--advancetime', action='store', help='The amount of days for advancing the time')
+    inventory_parser.add_argument('-d', '--date', action='store', help='Set a custom date')
     inventory_parser.set_defaults(func=inventory)
 
     args = parser.parse_args()
