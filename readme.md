@@ -5,7 +5,7 @@
 This is SuperPy's user guide. SuperPy let's you manage your supermarket's inventory by purchasing and selling products, and generating inventory, expired product and revenue/profit reports.
 
 
-### Overview of the commands you can use.
+### Overview of the commands
 <hr>
 
  #### superpy
@@ -17,33 +17,68 @@ This will ensure the program's internal date is set to the actual current date. 
 
 #### advance_time
 With the "advancetime" command you can modify the current date. Use a positive value for dates in the future, a negative value for dates in the past.
-E.g.: "python main.py advance_time -a 1" will change the current date to tomorrow.
-E.g.: "python main.py advance_time -a -1 will change the current date to yesterday.
-E.g.: "python main.py advance_time -r will reset the date to today’s date.
+
+To shift the date 1 day forward
+```
+python main.py advance_time -a 1
+```
+To shift the day 1 day backwards
+```
+python main.py advance_time -a -1
+```
+
+To reset the date to today's actual date
+```
+python main.py advance_time -r
+```
+
+
+#### buy
+With the buy command you can add a product to the stock.
+Submit the productname, the price for which it is bought and the expiration date
+By default the buying date is set to the current day. To use another date for buying you can use the "advance_time" command to change the day.
+
+To add an apple bought for €0.50 with expiration date 2022-09-20:
+```
+python main.py buy apple 0.5 2022-09-20
+```
+
+#### sell
+To sell a product enter the productname and the price for which it is sold. E.g:
+```
+python main.py sell apple 1
+```
+
+#### inventory
+Prints a report of all products in stock that have not expired
+To print the inventory for the current day:
+```
+python main.py inventory
+```
+
+Use "-d" to print an inventory for a custom date:
+```
+python main.py inventory -d 2022-09-10
+```
+
+#### expired
+Prints a report of expired products. By default it uses the current day as date.
+To print the inventory for the current day.
+```
+python main.py expired
+```
+Use "-d" to print a report for another date.
+```
+python main.py expired -d 2022-09-10
+```
                         
-    buy                 With the buy command you can add a product to the stock.
-                        Submit the productname, the price for which it is bought and the expiration date
-                        By default the buying date is set to the current day. To use another date for buying you can use the "advance_time" command to change the day.
-                        E.g.: To add an apple bought for €0.50 with expiration date 2022-09-20:
-                        "python main.py buy apple 0.5 2022-09-20"
-                        
-    sell                To sell a product enter the productname and the price for which it is sold. E.g:
-                        "python main.py sell apple 1"
-                        
-    inventory           Print a report of all products in stock that have not expired
-                        E.g.: To print the inventory for the current day:
-                        "python main.py inventory"
-                        E.g.: Use "-d" to print an inventory for another date:
-                        "python main.py inventory -d 2022-09-10"
-                        
-    expired             Prints a report of expired products. By default it uses the current day as date.
-                        E.g.: To print the inventory for the current day:
-                        "python main.py expired"
-                        E.g.: Use "-d" to print a report for another date:
-                        "python main.py expired -d 2022-09-10"
-                        
-    revenue             Prints a revenue and profit report. By default it uses the current day as date.
-                        E.g.: To print the inventory for the current day:
-                        "python main.py expired"
-                        E.g.: Use "-d" to print a report for another date:
-                        "python main.py expired -d 2022-09-10"
+#### revenue
+Prints a revenue and profit report. By default it uses the current day as date.
+To print the inventory for the current day.
+```
+python main.py expired
+```
+Use "-d" to print a report for another date.
+```
+python main.py expired -d 2022-09-10
+```
