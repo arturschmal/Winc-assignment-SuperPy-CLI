@@ -1,12 +1,7 @@
 # Imports
-import os
 import argparse
 from argparse import RawTextHelpFormatter
-import csv
-from datetime import date, datetime, timedelta
 from sp_functions import *
-from prettytable import PrettyTable
-from fpdf import FPDF
 
 
 # Do not change these lines.

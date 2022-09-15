@@ -1,7 +1,5 @@
-from asyncore import read
 import os
 import csv
-import argparse
 from datetime import date, datetime, timedelta
 from prettytable import from_csv
 from fpdf import FPDF
