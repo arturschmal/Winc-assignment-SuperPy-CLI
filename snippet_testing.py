@@ -272,5 +272,5 @@ from prettytable import from_csv
 # pdf.ln(5)
 # pdf.cell(txt=f'→ Profit on {today} is €{profit:.2f}\n')
 
-if not os.path.isdir('pdf_exports'):
-    os.mkdir('pdf_exports')
+# if not os.path.isdir('pdf_exports'):
+#     os.mkdir('pdf_exports')
