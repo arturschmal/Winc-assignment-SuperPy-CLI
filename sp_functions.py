@@ -4,11 +4,13 @@ import csv
 import argparse
 from datetime import date, datetime, timedelta
 from prettytable import from_csv
+from fpdf import FPDF
 
 
 # reset the day to today check csv files
 def superpy(args):
     reset_today()
+    dir_check()
     csv_check()
     today = read_today()
     print(f'\nSuperpy is ready for use. Today’s date is {today}.\n')
@@ -84,6 +86,20 @@ def csv_check():
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
         csv_file.close()
+
+def dir_check():
+    if not os.path.isdir('pdf_exports'):
+        os.mkdir('pdf_exports')
+
+def load_data_from_csv(csv_filepath):
+                    headings, rows = [], []
+                    with open(csv_filepath, encoding="utf8") as csv_file:
+                        for row in csv.reader(csv_file, delimiter=","):
+                            if not headings:  # extracting column names from first row:
+                                headings = row
+                            else:
+                                rows.append(row)
+                    return headings, rows
 
 
 # BUY AND SELL ———————————————————————————————————————————————————————————————
@@ -188,7 +204,7 @@ def inventory(args):
         for line in csv_reader:
             if line['expiration_date'] >= today:
                 inventory.append(line)
-        # print(inventory)
+
         with open('inventory_temp.csv', mode='w') as f:
             field_names = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
             writer = csv.DictWriter(f, fieldnames=field_names)
@@ -202,6 +218,44 @@ def inventory(args):
             table.align = 'l'
     
     print(table)
+    print('\n')
+
+    export_question = input('Do you want to export the report to a PDF file?\n'
+                             'Enter "y" for yes or "n" for no:  ')
+    export_question = export_question.lower()
+
+    if export_question == 'y':
+        class inventory_PDF(FPDF):
+            def inventory_table(self, headings, rows, col_widths=(20, 40, 40, 40, 40)):
+                for col_width, heading in zip(col_widths, headings):
+                    self.cell(col_width, 7, heading, border=1, align="L")
+                self.ln()
+                for row in rows:
+                    self.cell(col_widths[0], 6, row[0], border="LR", align="L")
+                    self.cell(col_widths[1], 6, row[1], border="LR", align="L")
+                    self.cell(col_widths[2], 6, row[2], border="LR", align="L")
+                    self.cell(col_widths[3], 6, row[3], border="LR", align="L")
+                    self.cell(col_widths[4], 6, row[4], border="LR", align="L")
+                    self.ln()
+                # Closure line:
+                self.cell(sum(col_widths), 0, "", border="T")
+
+        load_data_from_csv("inventory_temp.csv")
+
+        col_names, data = load_data_from_csv("inventory_temp.csv")
+        pdf = inventory_PDF(orientation="L", unit="mm", format="A4")
+        pdf.set_font("helvetica", size=10)
+        pdf.add_page()
+        pdf.cell(txt=f'Inventory on {today}')
+        pdf.ln(10)
+        pdf.inventory_table(col_names, data)
+        pdf_name = 'inventory_' + today
+        pdf.output("./pdf_exports/"f'{pdf_name}.pdf')
+
+        print(f'\n\nThe file {pdf_name}.pdf report exported to the "pdf_exports" directory\n\n')
+        
+    if export_question == 'n':
+        print(f'\n\nNo report was exported.\n\n')
 
 
 def expired(args):
@@ -239,6 +293,43 @@ def expired(args):
                 table.align = 'l'
     
             print(table)
+
+            export_question = input('Do you want to export the report to a PDF file?\n'
+                             'Enter "y" for yes or "n" for no:  ')
+            export_question = export_question.lower()
+
+            if export_question == 'y':
+                class expired_PDF(FPDF):
+                    def expired_table(self, headings, rows, col_widths=(20, 40, 40, 40, 40)):
+                        for col_width, heading in zip(col_widths, headings):
+                            self.cell(col_width, 7, heading, border=1, align="L")
+                        self.ln()
+                        for row in rows:
+                            self.cell(col_widths[0], 6, row[0], border="LR", align="L")
+                            self.cell(col_widths[1], 6, row[1], border="LR", align="L")
+                            self.cell(col_widths[2], 6, row[2], border="LR", align="L")
+                            self.cell(col_widths[3], 6, row[3], border="LR", align="L")
+                            self.cell(col_widths[4], 6, row[4], border="LR", align="L")
+                            self.ln()
+                        # Closure line:
+                        self.cell(sum(col_widths), 0, "", border="T")
+
+                load_data_from_csv("expired_temp.csv")
+
+                col_names, data = load_data_from_csv("expired_temp.csv")
+                pdf = expired_PDF(orientation="L", unit="mm", format="A4")
+                pdf.set_font("helvetica", size=10)
+                pdf.add_page()
+                pdf.cell(txt=f'All expired products on {today}')
+                pdf.ln(10)
+                pdf.expired_table(col_names, data)
+                pdf_name = 'expired_products_' + today
+                pdf.output("./pdf_exports/"f'{pdf_name}.pdf')
+
+                print(f'\n\nThe file {pdf_name}.pdf report exported to the "pdf_exports" directory\n\n')
+                
+            if export_question == 'n':
+                print(f'\n\nNo report was exported.\n\n')
 
 
 # revenue report
@@ -283,5 +374,47 @@ def revenue(args):
             print(f'\n→ Revenue on {today} is €{revenue:.2f}\n')
             print(f'→ Profit on {today} is €{profit:.2f}\n')
 
-        
-        
+            export_question = input('Do you want to export the report to a PDF file?\n'
+                             'Enter "y" for yes or "n" for no:  ')
+            export_question = export_question.lower()
+
+            if export_question == 'y':
+                class revenue_PDF(FPDF):
+                    def revenue_table(self, headings, rows, col_widths=(20, 40, 40, 40, 40, 40)):
+                        for col_width, heading in zip(col_widths, headings):
+                            self.cell(col_width, 7, heading, border=1, align="L")
+                        self.ln()
+                        for row in rows:
+                            self.cell(col_widths[0], 6, row[0], border="LR", align="L")
+                            self.cell(col_widths[1], 6, row[1], border="LR", align="L")
+                            self.cell(col_widths[2], 6, row[2], border="LR", align="L")
+                            self.cell(col_widths[3], 6, row[3], border="LR", align="L")
+                            self.cell(col_widths[4], 6, row[4], border="LR", align="L")
+                            self.cell(col_widths[5], 6, row[5], border="LR", align="L")
+                            self.ln()
+                        # Closure line:
+                        self.cell(sum(col_widths), 0, "", border="T")
+
+                load_data_from_csv("sold_temp.csv")
+
+                col_names, data = load_data_from_csv("sold_temp.csv")
+                pdf = revenue_PDF(orientation="L", unit="mm", format="A4")
+                pdf.set_font("helvetica", size=10)
+                pdf.add_page()
+                pdf.revenue_table(col_names, data)
+                pdf.ln(10)
+                pdf.cell(txt=f'Total revenue on {today} is {revenue:.2f}\n')
+                pdf.ln(7)
+                pdf.cell(txt=f'Total profit on {today} is {profit:.2f}\n')
+                pdf_name = 'revenue_' + today
+                pdf.output("./pdf_exports/"f'{pdf_name}.pdf')
+
+                print(f'\n\nThe file {pdf_name}.pdf report exported to the "pdf_exports" directory\n\n')
+                
+            if export_question == 'n':
+                print(f'\n\nNo report was exported.\n\n')
+
+
+
+                
+

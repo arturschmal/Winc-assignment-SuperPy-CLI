@@ -225,8 +225,52 @@ from prettytable import from_csv
 #     #    fh.write(','.join(tmp_row))
 #     print(tmp_row)
 
-with open('sold_temp.csv') as f:
-    table = from_csv(f)
-    table.align = 'l'
+# with open('sold_temp.csv') as f:
+#     table = from_csv(f)
+#     table.align = 'l'
 
-print(table)
+# print(table)
+
+# from fpdf import FPDF
+
+# class revenue_PDF(FPDF):
+#     def revenue_table(self, headings, rows, col_widths=(20, 40, 40, 40, 40, 40)):
+#         for col_width, heading in zip(col_widths, headings):
+#             self.cell(col_width, 7, heading, border=1, align="L")
+#         self.ln()
+#         for row in rows:
+#             self.cell(col_widths[0], 6, row[0], border="LR", align="L")
+#             self.cell(col_widths[1], 6, row[1], border="LR", align="L")
+#             self.cell(col_widths[2], 6, row[2], border="LR", align="L")
+#             self.cell(col_widths[3], 6, row[3], border="LR", align="L")
+#             self.cell(col_widths[4], 6, row[4], border="LR", align="L")
+#             self.cell(col_widths[5], 6, row[5], border="LR", align="L")
+#             self.ln()
+#         # Closure line:
+#         self.cell(sum(col_widths), 0, "", border="T")
+
+
+# def load_data_from_csv(csv_filepath):
+#     headings, rows = [], []
+#     with open(csv_filepath, encoding="utf8") as csv_file:
+#         for row in csv.reader(csv_file, delimiter=","):
+#             if not headings:  # extracting column names from first row:
+#                 headings = row
+#             else:
+#                 rows.append(row)
+#     return headings, rows
+
+
+# col_names, data = load_data_from_csv("sold_temp.csv")
+# pdf = revenue_PDF(orientation="L", unit="mm", format="A4")
+# pdf.set_font("helvetica", size=10)
+# pdf.add_page()
+# pdf.inventory_table(col_names, data)
+# pdf.output("revenue.pdf")
+# pdf.ln(10)
+# pdf.cell(txt=f'\n→ Revenue on {today} is €{revenue:.2f}\n')
+# pdf.ln(5)
+# pdf.cell(txt=f'→ Profit on {today} is €{profit:.2f}\n')
+
+if not os.path.isdir('pdf_exports'):
+    os.mkdir('pdf_exports')

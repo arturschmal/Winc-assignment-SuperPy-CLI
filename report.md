@@ -12,5 +12,5 @@ When a product is sold with the `sell` parser, it checks `bought.csv` if the pro
 When a report is made with the `inventory`, `expired` or `revenue` parser, the data for the report is copied to a temporary file that is used to print a table in the terminal or to save the data as a pdf file.
 <br><br>
 ### __save to pdf__
-The code makes use of the `pyPdf` library so that reports can be exported to a PDF file.
+The program makes use of the `fpdf2` library to export the data from `inventory`, `expired` and `revenue` reports that are stored in the temp csv files to a pdf file in the `pdf_exports` directory.
 
