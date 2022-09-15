@@ -51,7 +51,7 @@ python main.py sell apple 1
 ```
 
 #### inventory
-Prints a report of all products in stock that have not expired
+Prints a report of all products in stock that have not expired.
 To print the inventory for the current day:
 ```
 python main.py inventory
