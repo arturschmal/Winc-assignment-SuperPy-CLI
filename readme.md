@@ -36,7 +36,8 @@ python main.py advance_time -r
 #### buy
 With the buy command you can add a product to the stock.
 Submit the productname, the price for which it is bought and the expiration date
-By default the buying date is set to the current day. To use another date for buying you can use the "advance_time" command to change the day.
+By default the buying date is set to the current day. To use another date for buying you can use the "advance_time" command to change the current date.
+Note that you should always enter dates in YYYY-MM-DD format.
 
 To add an apple bought for €0.50 with expiration date 2022-09-20:
 ```
@@ -81,4 +82,19 @@ python main.py expired
 Use "-d" to print a report for another date.
 ```
 python main.py expired -d 2022-09-10
+```
+
+### Requirements
+<hr>
+
+SuperPy makes use of a couple of third party libraries that you should install:
+
+#### PrettyTable
+```
+pip install prettytable
+```
+
+#### FPDF
+```
+pip install fpdf2
 ```

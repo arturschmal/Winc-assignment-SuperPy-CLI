@@ -61,14 +61,6 @@ def read_today():
     return today.strftime('%Y-%m-%d')
 
 
-def date_validation(date):
-    try:
-        datetime.strptime(date, '%Y-%m-%d')
-    except ValueError:
-        print('❗️❗️❗️Date format should be yyyy-mm-dd')
-        return None
-
-
 # CSV ———————————————————————————————————————————————————————————————
 
 # check if csv files exist and create them if they don't exist
