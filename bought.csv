@@ -1,9 +1,6 @@
-id,product_name,buy_date,buy_price,expiration_date
-1,appel,2022-09-06,0.5,2022-09-10
-2,chocoladereep,2022-09-01,1,2022-10-30
-3,cola,2022-09-06,1.5,2022-11-30
-4,banaan,2021-01-01,0.5,2021-01-04
-5,fanta,2022-09-07,1.2,2022-12-31
-6,kauwgom,2022-09-12,1.2,2022-12-30
-7,kauwgom,2022-09-12,1.2,2022-12-30
-8,kauwgom,2022-09-12,1.2,2022-12-30
+id,product_name,buy_price,buy_date,expiration_date
+3,cola,1.00,2022-09-14,2022-12-31
+4,gepelde tomaten,0.90,2022-09-14,2023-02-20
+5,schuursponsjes,1.20,2022-09-14,2024-10-30
+6,cola,1.00,2022-09-14,2023-01-10
+5,appel,0.50,2022-09-14,2022-09-20

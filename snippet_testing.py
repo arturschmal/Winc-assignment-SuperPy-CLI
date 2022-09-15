@@ -163,27 +163,27 @@ from prettytable import from_csv
 # date_validation('2022-01-01')
 
 
-def optional(args):
-    if args.first_optional:
-        print('first optional')
-    if args.second_optional:
-        print('second optional')
-    else:
-        print('no optionals given')
+# def optional(args):
+#     if args.first_optional:
+#         print('first optional')
+#     if args.second_optional:
+#         print('second optional')
+#     else:
+#         print('no optionals given')
 
-from argparse import RawTextHelpFormatter
+# from argparse import RawTextHelpFormatter
 
-# create the top level parser
-parser = argparse.ArgumentParser(description='CLI for supermarket inventories', formatter_class=RawTextHelpFormatter)
-# parser.add_argument()
-subparsers = parser.add_subparsers()
+# # create the top level parser
+# parser = argparse.ArgumentParser(description='CLI for supermarket inventories', formatter_class=RawTextHelpFormatter)
+# # parser.add_argument()
+# subparsers = parser.add_subparsers()
 
 
-# test optional arguments parser
-optional_parser = subparsers.add_parser('optional', help='')
-optional_parser.add_argument('-f', '--first_optional', action='store_true', help='The amount of days for advancing the time')
-optional_parser.add_argument('-s', '--second_optional', action='store_true', help='Reset the date to today')
-optional_parser.set_defaults(func=optional)
+# # test optional arguments parser
+# optional_parser = subparsers.add_parser('optional', help='')
+# optional_parser.add_argument('-f', '--first_optional', action='store_true', help='The amount of days for advancing the time')
+# optional_parser.add_argument('-s', '--second_optional', action='store_true', help='Reset the date to today')
+# optional_parser.set_defaults(func=optional)
 
 
 
@@ -198,6 +198,35 @@ optional_parser.set_defaults(func=optional)
 #         return date
 
 
-today = date_validation('1-1-2020')
+# today = date_validation('1-1-2020')
 
-print(today)
+# print(today)
+
+#     inventory = []
+#     with open('bought.csv', 'r', newline='') as csv_file:
+#         csv_reader = csv.DictReader(csv_file)
+#         for line in csv_reader:
+#             if line['expiration_date'] >= today:
+#                 inventory.append(list(line.items())[1][1])
+
+
+# file_name =  'bought.csv'
+# output_file = 'inventory_temp.csv'
+# csv_file = open(file_name, 'r', newline='')
+
+# ## note that the index of the year column is excluded
+# column_indices = [1,3,4]
+# with open(output_file, 'w', newline='') as fh:
+#     reader = csv.reader(csv_file, delimiter=',')
+#     tmp_row = []
+#     for row in reader:
+#        for col_inx in column_indices:
+#            tmp_row.append(row[col_inx])
+#     #    fh.write(','.join(tmp_row))
+#     print(tmp_row)
+
+with open('sold_temp.csv') as f:
+    table = from_csv(f)
+    table.align = 'l'
+
+print(table)

@@ -1,8 +1,18 @@
+from asyncore import read
 import os
 import csv
 import argparse
 from datetime import date, datetime, timedelta
 from prettytable import from_csv
+
+
+# reset the day to today check csv files
+def superpy(args):
+    reset_today()
+    csv_check()
+    today = read_today()
+    print(f'\nSuperpy is ready for use. Today’s date is {today}.\n')
+
 
 # DATE ———————————————————————————————————————————————————————————————
 
@@ -14,12 +24,14 @@ def write_today():
             file.write(today)
         file.close()
 
+
 # resets the date in 'datefile.txt' to today's actual date
 def reset_today():
     today = str(date.today())
     with open('date_file.txt', 'w') as file:
         file.write(today)
     file.close()
+
 
 # modify the date in 'datefile.txt' with a timedelta
 def advance_time(args):
@@ -30,12 +42,13 @@ def advance_time(args):
     with open('date_file.txt', 'w') as file:
         if args.reset == True:
             reset_today()
-            print(f'Today’s date is reset to {date.today()}')
+            print(f'\n→ Today’s date is reset to {date.today()}\n')
         else: 
             advancetime = int(args.advancetime)
             new_date = (datetime.strptime(date_string, format_string)) + timedelta(days=advancetime)
             file.write(new_date.strftime('%Y-%m-%d'))
-            print(f'The current date is shifted to {new_date.strftime("%Y-%m-%d")}')
+            print(f'\n→ The current date is shifted to {new_date.strftime("%Y-%m-%d")}\n')
+
 
 # read the date from 'datefile.txt'
 def read_today():
@@ -49,13 +62,10 @@ def read_today():
 def date_validation(date):
     try:
         datetime.strptime(date, '%Y-%m-%d')
-        return date
     except ValueError:
-        print('Date format should be yyyy-mm-dd')
+        print('❗️❗️❗️Date format should be yyyy-mm-dd')
         return None
-    # else:
-    #     return date
-    
+
 
 # CSV ———————————————————————————————————————————————————————————————
 
@@ -63,14 +73,14 @@ def date_validation(date):
 def csv_check():
     if not os.path.isfile('bought.csv'):
         with open('bought.csv', mode='w') as csv_file:
-            fieldnames = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
+            fieldnames = ['id', 'product_name', 'buy_price', 'buy_date', 'expiration_date']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
         csv_file.close()
 
     if not os.path.isfile('sold.csv'):
         with open('sold.csv', mode='w') as csv_file:
-            fieldnames = ['id', 'bought_id', 'product_name', 'sell_date', 'sell_price']
+            fieldnames = ['id', 'product_name', 'sell_date', 'buy_price', 'sell_price', 'profit']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
         csv_file.close()
@@ -80,6 +90,12 @@ def csv_check():
 
 # add products to 'bought.csv'
 def buy(args):
+    try:
+        datetime.strptime(args.expiration_date, '%Y-%m-%d')
+    except ValueError:
+        print('❗️❗️❗️Date format should be yyyy-mm-dd')
+        return None
+    
     with open('bought.csv',"r") as f:
         reader = csv.reader(f,delimiter = ",")
         data = list(reader)
@@ -90,10 +106,10 @@ def buy(args):
         date = read_today()
         add_line = {'id': product_id, 
             'product_name': args.product_name, 
-            'buy_date': date, 
-            'buy_price': args.buy_price, 
+            'buy_price': "{:.2f}".format(float(args.buy_price)),
+            'buy_date': date,  
             'expiration_date': args.expiration_date}
-        field_names = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
+        field_names = ['id', 'product_name', 'buy_price', 'buy_date', 'expiration_date']
         writer = csv.DictWriter(f, fieldnames=field_names)
         writer.writerow(add_line)
     f.close()
@@ -101,86 +117,171 @@ def buy(args):
     print(f'\n✅ {args.product_name} was added to the stock\n')
 
 
+# add sold product to sold.csv and store same id as product has in 
 def sell(args):
-    with open('sold.csv',"r") as f:
-        reader = csv.reader(f,delimiter = ",")
-        data = list(reader)
-        row_count = len(data)-1
-        product_id = row_count + 1
+    # try:
+    #     datetime.strptime(args.sell_date, '%Y-%m-%d')
+    # except ValueError:
+    #     print('\n❗️❗️❗️Date format should be yyyy-mm-dd\n')
+    #     return None 
+    today = read_today()
+    sell_item = []
 
-    with open("bought.csv", "r") as f:
-        file_reader = csv.reader(f)
-        for i in file_reader:
-            if args.product_name in i:
-                bought_id = i[0]
+    with open('bought.csv', 'r+', newline='') as csv_file:
+        temp_lines = []
+        csv_reader = csv.DictReader(csv_file)
+        for line in csv_reader:
+            temp_lines.append(line)
 
-    add_line = {'id': product_id, 'bought_id': bought_id, 'product_name': args.product_name, 'sell_date': args.sell_date, 'sell_price': args.sell_price}
-    with open('sold.csv', mode='a') as f:
-        field_names = ['id', 'bought_id', 'product_name', 'sell_date', 'sell_price']
-        writer = csv.DictWriter(f, fieldnames=field_names)
-        writer.writerow(add_line)
-    f.close()
-    print(f'\n✅ {args.product_name} was sold\n')
+        for row in temp_lines:
+            if args.product_name == row['product_name']:
+                if row['expiration_date'] > today:
+                    print(today)
+                    sell_item.append(row)
+                    keys = temp_lines[0].keys()
+                    temp_lines.remove(row)
+                    if len(sell_item) == 1:
+                        break
+
+        # print(f'temp_lines: {temp_lines}')
+        # print(sell_item)
+    if len(sell_item) == 0:
+        print('\n→ Product is not in stock.\n') 
+    else:  
+        id = sell_item[0]['id']
+        buy_price = float(sell_item[0]['buy_price'])
+        sell_date = read_today()
+        add_line = {'id': id, 'product_name': args.product_name, 'sell_date': sell_date, 'buy_price': "{:.2f}".format(float(buy_price)), 'sell_price': "{:.2f}".format(float(args.sell_price)), 'profit': "{:.2f}".format(float(args.sell_price) - buy_price)}
+        with open('sold.csv', mode='a') as f:
+            field_names = ['id', 'product_name', 'sell_date', 'buy_price', 'sell_price', 'profit']
+            writer = csv.DictWriter(f, fieldnames=field_names)
+            writer.writerow(add_line)
+        
+        print(f'\n✅ {args.product_name} was sold\n')
+
+        # keys = temp_lines[0].keys()
+    
+        with open('bought.csv', 'w') as file:
+            csvwriter = csv.DictWriter(file, keys)
+            csvwriter.writeheader()
+            csvwriter.writerows(temp_lines)
+
 
 
 # REPORTS ———————————————————————————————————————————————————————————————
 
-# inventory report
-# def inventory(args):
-#     try:
-#         datetime.strptime(args.date, '%Y-%m-%d')
-#     except ValueError:
-#         raise ValueError('Date is not in correct format. Enter date as yyyy-mm-dd')
-
-#     date = datetime.strptime(args.date, '%Y-%m-%d')
-
-#     with open('bought.csv', 'r', newline='') as csv_file:
-#         csv_reader = csv.DictReader(csv_file)
-#         for line in csv_reader:
-#             if line['expiration_date'] >= date.strftime('%Y-%m-%d'):
-#                 print(line)
-
-
-# def inventory(args):
-#     with open('bought.csv', 'r', newline='') as csv_file:
-#         if args.date:
-#             today = date_validation(args.date)
-#         if today == None:
-#             print('Date format should be yyyy-mm-dd')
-#         else:
-#             today = read_today()
-#             csv_reader = csv.DictReader(csv_file)
-#             for line in csv_reader:
-#                 if line['expiration_date'] >= today:
-#                     print(line)
-
-# def inventory(args):
-#     if args.date:
-#         date_validation(args.date)
-#         if date_validation(args.date) == None:
-#             print('Date format should be yyyy-mm-dd')
-#         else:
-#             today = date_validation(args.date)
-#     if not args.date:
-#         today = read_today()
-
-#     with open('bought.csv', 'r', newline='') as csv_file:
-#         csv_reader = csv.DictReader(csv_file)
-#         for line in csv_reader:
-#             if line['expiration_date'] >= today:
-#                 print(line)
-
+# inventory report from today's date or custom date
 def inventory(args):
     if args.date:
-        date_validation(args.date)
-    if date_validation(args.date) is not None:
-        today = date_validation(args.date)
+        try:
+            datetime.strptime(args.date, '%Y-%m-%d')
+            today = args.date
+        except ValueError:
+            print('\n❗️❗️❗️Date format should be yyyy-mm-dd\n')
+            return None
     else:
         today = read_today()
 
+    inventory = []
     with open('bought.csv', 'r', newline='') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for line in csv_reader:
             if line['expiration_date'] >= today:
-                print(line)
+                inventory.append(line)
+        # print(inventory)
+        with open('inventory_temp.csv', mode='w') as f:
+            field_names = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
+            writer = csv.DictWriter(f, fieldnames=field_names)
+            writer.writeheader()
+            for line in inventory:
+                writer.writerow(line)
 
+        print(f'\n→ Inventory on {today}\n')
+        with open('inventory_temp.csv') as f:
+            table = from_csv(f)
+            table.align = 'l'
+    
+    print(table)
+
+
+def expired(args):
+    if args.date:
+        try:
+            datetime.strptime(args.date, '%Y-%m-%d')
+            today = args.date
+        except ValueError:
+            print('❗️❗️❗️Date format should be yyyy-mm-dd')
+            return None
+    else:
+        today = read_today()
+
+    expired = []
+    with open('bought.csv', 'r', newline='') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for line in csv_reader:
+            if line['expiration_date'] < today:
+                expired.append(line)
+        
+        if len(expired) < 1:
+            print(f'\n→ There are no expired products\n')
+        else:
+            with open('expired_temp.csv', mode='w') as f:
+                field_names = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
+                writer = csv.DictWriter(f, fieldnames=field_names)
+                writer.writeheader()
+                for line in expired:
+                    writer.writerow(line)
+
+                print(f'\n→ The following products are expired\n')
+
+            with open('expired_temp.csv') as f:
+                table = from_csv(f)
+                table.align = 'l'
+    
+            print(table)
+
+
+# revenue report
+def revenue(args):
+    if args.date:
+        try:
+            datetime.strptime(args.date, '%Y-%m-%d')
+            today = args.date
+        except ValueError:
+            print('❗️❗️❗️Date format should be yyyy-mm-dd')
+            return None
+    else:
+        today = read_today()
+    
+    revenue = 0.00
+    profit = 0.00
+    sold_products = []
+    with open('sold.csv', 'r', newline='') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for line in csv_reader:
+            if line['sell_date'] == today:
+                revenue += float(line['sell_price'])
+                profit += float(line['profit'])
+                sold_products.append(line)
+        if revenue == 0:
+            print(f'\n→ No revenue on {today}\n')
+        else:
+            with open('sold_temp.csv', mode='w') as f:
+                field_names = ['id', 'product_name', 'sell_date', 'buy_price', 'sell_price', 'profit']
+                writer = csv.DictWriter(f, fieldnames=field_names)
+                writer.writeheader()
+                for line in sold_products:
+                    writer.writerow(line)
+
+                print(f'\n→ Sold products on {today}:\n')
+                
+            with open('sold_temp.csv') as f:
+                table = from_csv(f)
+                table.align = 'l'
+            
+            print(table)
+            print(f'\n→ Revenue on {today} is €{revenue:.2f}\n')
+            print(f'→ Profit on {today} is €{profit:.2f}\n')
+
+        
+        
