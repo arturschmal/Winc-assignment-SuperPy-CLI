@@ -4,6 +4,21 @@
 
 This is SuperPy's user guide. SuperPy let's you manage your supermarket's inventory by purchasing and selling products, and generating inventory, expired product and revenue/profit reports.
 
+### Requirements
+<hr>
+
+SuperPy makes use of a couple of third party libraries that you should install:
+
+#### PrettyTable
+```
+pip install prettytable
+```
+
+#### FPDF
+```
+pip install fpdf2
+```
+
 
 ### Overview of the commands
 <hr>
@@ -77,24 +92,16 @@ python main.py expired -d 2022-09-10
 Prints a revenue and profit report. By default it uses the current day as date.
 To print the inventory for the current day.
 ```
-python main.py expired
+python main.py revenue
 ```
 Use "-d" to print a report for another date.
 ```
-python main.py expired -d 2022-09-10
+python main.py revenue -d 2022-09-10
 ```
 
-### Requirements
+### Save reports as PDF
 <hr>
 
-SuperPy makes use of a couple of third party libraries that you should install:
-
-#### PrettyTable
-```
-pip install prettytable
-```
-
-#### FPDF
-```
-pip install fpdf2
-```
+ 
+When you have generated a report using the inventory, expired or revenue reports you will be asked of you'd like to save the report as a PDF.
+Press `y` to do so, or `n` to decline.
