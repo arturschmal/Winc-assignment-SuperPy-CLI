@@ -125,11 +125,6 @@ def buy(args):
 
 # add sold product to sold.csv and store same id as product has in 
 def sell(args):
-    # try:
-    #     datetime.strptime(args.sell_date, '%Y-%m-%d')
-    # except ValueError:
-    #     print('\n❗️❗️❗️Date format should be yyyy-mm-dd\n')
-    #     return None 
     today = read_today()
     sell_item = []
 
@@ -142,15 +137,12 @@ def sell(args):
         for row in temp_lines:
             if args.product_name == row['product_name']:
                 if row['expiration_date'] > today:
-                    print(today)
                     sell_item.append(row)
                     keys = temp_lines[0].keys()
                     temp_lines.remove(row)
                     if len(sell_item) == 1:
                         break
 
-        # print(f'temp_lines: {temp_lines}')
-        # print(sell_item)
     if len(sell_item) == 0:
         print('\n→ Product is not in stock.\n') 
     else:  
@@ -164,8 +156,6 @@ def sell(args):
             writer.writerow(add_line)
         
         print(f'\n✅ {args.product_name} was sold\n')
-
-        # keys = temp_lines[0].keys()
     
         with open('bought.csv', 'w') as file:
             csvwriter = csv.DictWriter(file, keys)
