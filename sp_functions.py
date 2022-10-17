@@ -64,14 +64,14 @@ def read_today():
 # check if csv files exist and create them if they don't exist
 def csv_check():
     if not os.path.isfile('bought.csv'):
-        with open('bought.csv', mode='w') as csv_file:
+        with open('bought.csv', mode='w', newline='') as csv_file:
             fieldnames = ['id', 'product_name', 'buy_price', 'buy_date', 'expiration_date']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
         csv_file.close()
 
     if not os.path.isfile('sold.csv'):
-        with open('sold.csv', mode='w') as csv_file:
+        with open('sold.csv', mode='w', newline='') as csv_file:
             fieldnames = ['id', 'product_name', 'sell_date', 'buy_price', 'sell_price', 'profit']
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writeheader()
@@ -83,7 +83,7 @@ def dir_check():
 
 def load_data_from_csv(csv_filepath):
                     headings, rows = [], []
-                    with open(csv_filepath, encoding="utf8") as csv_file:
+                    with open(csv_filepath, encoding="utf8", newline='') as csv_file:
                         for row in csv.reader(csv_file, delimiter=","):
                             if not headings:  # extracting column names from first row:
                                 headings = row
@@ -102,13 +102,13 @@ def buy(args):
         print('❗️❗️❗️Date format should be yyyy-mm-dd')
         return None
     
-    with open('bought.csv',"r") as f:
+    with open('bought.csv',"r", newline='') as f:
         reader = csv.reader(f,delimiter = ",")
         data = list(reader)
         row_count = len(data)-1
         product_id = row_count + 1
     
-    with open('bought.csv', mode='a') as f:
+    with open('bought.csv', mode='a', newline='') as f:
         date = read_today()
         add_line = {'id': product_id, 
             'product_name': args.product_name, 
@@ -158,7 +158,7 @@ def sell(args):
         buy_price = float(sell_item[0]['buy_price'])
         sell_date = read_today()
         add_line = {'id': id, 'product_name': args.product_name, 'sell_date': sell_date, 'buy_price': "{:.2f}".format(float(buy_price)), 'sell_price': "{:.2f}".format(float(args.sell_price)), 'profit': "{:.2f}".format(float(args.sell_price) - buy_price)}
-        with open('sold.csv', mode='a') as f:
+        with open('sold.csv', mode='a', newline='') as f:
             field_names = ['id', 'product_name', 'sell_date', 'buy_price', 'sell_price', 'profit']
             writer = csv.DictWriter(f, fieldnames=field_names)
             writer.writerow(add_line)
@@ -167,7 +167,7 @@ def sell(args):
 
         # keys = temp_lines[0].keys()
     
-        with open('bought.csv', 'w') as file:
+        with open('bought.csv', 'w', newline='') as file:
             csvwriter = csv.DictWriter(file, keys)
             csvwriter.writeheader()
             csvwriter.writerows(temp_lines)
@@ -195,7 +195,7 @@ def inventory(args):
             if line['expiration_date'] >= today:
                 inventory.append(line)
 
-        with open('inventory_temp.csv', mode='w') as f:
+        with open('inventory_temp.csv', mode='w', newline='') as f:
             field_names = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
             writer = csv.DictWriter(f, fieldnames=field_names)
             writer.writeheader()
@@ -203,7 +203,7 @@ def inventory(args):
                 writer.writerow(line)
 
         print(f'\n→ Inventory on {today}\n')
-        with open('inventory_temp.csv') as f:
+        with open('inventory_temp.csv', newline='') as f:
             table = from_csv(f)
             table.align = 'l'
     
@@ -269,7 +269,7 @@ def expired(args):
         if len(expired) < 1:
             print(f'\n→ There are no expired products\n')
         else:
-            with open('expired_temp.csv', mode='w') as f:
+            with open('expired_temp.csv', mode='w', newline='') as f:
                 field_names = ['id', 'product_name', 'buy_date', 'buy_price', 'expiration_date']
                 writer = csv.DictWriter(f, fieldnames=field_names)
                 writer.writeheader()
@@ -278,7 +278,7 @@ def expired(args):
 
                 print(f'\n→ The following products are expired\n')
 
-            with open('expired_temp.csv') as f:
+            with open('expired_temp.csv', newline='') as f:
                 table = from_csv(f)
                 table.align = 'l'
     
@@ -347,7 +347,7 @@ def revenue(args):
         if revenue == 0:
             print(f'\n→ No revenue on {today}\n')
         else:
-            with open('sold_temp.csv', mode='w') as f:
+            with open('sold_temp.csv', mode='w', newline='') as f:
                 field_names = ['id', 'product_name', 'sell_date', 'buy_price', 'sell_price', 'profit']
                 writer = csv.DictWriter(f, fieldnames=field_names)
                 writer.writeheader()
@@ -356,7 +356,7 @@ def revenue(args):
 
                 print(f'\n→ Sold products on {today}:\n')
                 
-            with open('sold_temp.csv') as f:
+            with open('sold_temp.csv', newline='') as f:
                 table = from_csv(f)
                 table.align = 'l'
             
