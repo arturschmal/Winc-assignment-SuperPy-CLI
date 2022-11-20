@@ -1,8 +1,43 @@
 # SuperPy
-## Command Line Interface software for supermarkets
 
+#### Assignment for the Back-end Development course at Winc Academy.
 
+### The assignment:
+A large supermarket chain has asked you to write a command-line tool that is able to keep track of their inventory: they want to call it SuperPy. The core functionality is about keeping track and producing reports on various kinds of data:
+
+Which products the supermarket offers;
+- How many of each type of product the supermarket holds currently;
+- How much each product was bought for, and what its expiry date is;
+- How much each product was sold for or if it expired, the fact that it did;
+- All data must be saved in CSV files. 
+
+There are three important modules from the standard library you must use for this:
+
+- csv -- CSV File Reading and Writing
+- argparse -- Parser for command-line options, arguments and subcommands
+- datetime -- Basic date and time types
 This is SuperPy's user guide. SuperPy let's you manage your supermarket's inventory by purchasing and selling products, and generating inventory, expired product and revenue/profit reports.
+
+To obtain a passing grade, you will at least need to satisfy the following requirements:
+
+- Well-structured and documented code, including:
+  - Clear and effective variable and function names;
+  - Use of comments where the code does not speak for itself;
+  - Clear and effective separation of code into separate functions and possibly files.
+- Use of modules to the extent that it shows you were able to independently read and understand the documentation, and apply the techniques within:
+  - csv
+  - argparse
+  - datetime, including in particular the date object, strftime and strptime functions and datetime arithmetic using timedelta.
+- Use of external text files (CSV) to read and write data.
+- A well-structured and user friendly command-line interface with clear descriptions of each argument in the --help section.
+- The application must support:
+  - Setting and advancing the date that the application perceives as 'today';
+  - Recording the buying and selling of products on certain dates;
+  - Reporting revenue and profit over specified time periods;
+  - Exporting selections of data to CSV files
+<hr>
+
+### User guide for my software:
 
 ### Requirements
 <hr>
